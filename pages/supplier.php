@@ -200,7 +200,7 @@
                 return;
             }
 
-            start_loader();
+           // start_loader();
             $.ajax({
                 url: 'Insert/insert_supplier.php',
                 type: "POST",
@@ -217,8 +217,11 @@
                             text: "Supplier Saved!!",
                             type: "success",
                             timer: 2000
-                        });
-                        location.reload();
+                        }); 
+
+                        setTimeout(function() {
+    location.reload();
+}, 2000);
                     }
                     // else{
                     // alert(data)
