@@ -1,4 +1,22 @@
-<?php include('header.php'); ?>
+<?php
+
+include('header1.php');
+$query = "SELECT * FROM supplier Order by SupID DESC LIMIT 1";
+$result = mysqli_query($dbc, $query);
+$row = mysqli_fetch_array($result);
+$rowcount = mysqli_num_rows($result);
+
+if ($rowcount > 0) {
+    $SuppID = $row["SupID"];
+} else {
+    $SuppID = 0;
+}
+
+
+$SuppCode = $SuppID + 1;
+$SuppCode = sprintf("%05d", $SuppCode);
+
+?>
 
 <div class="content-wrapper" style="min-height: 543px;background-color:white;">
     <div class="content-header">
@@ -32,28 +50,77 @@
                         <div class="card-body">
                             <div class="container-fluid">
                                 <div class="container-fluid">
-                                    <table class="table table-hover table-striped">
-                                        <colgroup>
-                                            <col width="5%">
-                                            <col width="10%">
-                                            <col width="20%">
-                                            <col width="20%">
-                                            <col width="20%">
-                                            <col width="10%">
-                                            <col width="15%">
-                                        </colgroup>
+                                    <table class="table table-hover table-striped" id="tbl">
+
                                         <thead>
                                             <tr class="bg-primary disabled">
                                                 <th>#</th>
-                                                <th>Date Created</th>
-                                                <th>Supplier</th>
-                                                <th>Contact Person</th>
+                                                <th>Supplier Code</th>
+                                                <th>Supplier Name</th>
                                                 <th>Address</th>
+                                                <th>Contact Person</th>
+                                                <th>Contact No.</th>
+                                                <th>Email</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
+                                        <tbody>
+                                            <?php
+                                            $i = 1;
+                                            $result = mysqli_query($dbc, "Select * from supplier");
+                                            while ($row = mysqli_fetch_array($result)) {
+                                                if ($row['SupCode'] == '2') {
+                                                    continue;
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <?php echo $i++; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['SupCode']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['SupplierName']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Address']; ?>
+                                                    </td>
 
+                                                    <td>
+                                                        <?php echo $row['ContactPerson']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Contact']; ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo $row['Email']; ?>
+                                                    </td>
+
+                                                    <td style="text-align:center;">
+                                                        <?php
+                                                        if ($row['Status'] == 1)
+                                                            echo '<span class="right badge badge-success">Active</span>';
+                                                        else if ($row['Status'] == 0)
+                                                            echo '<span class="right badge badge-danger">Inactive</span>';
+                                                        ?>
+                                                    </td>
+                                                    <td style="text-align:center;">
+
+                                                        <a class="btn btn-primary btn-xs" href="#" title="Edit"
+                                                            onclick="getSupplier(<?php echo $row['SupID']; ?>);"> <i
+                                                                class="fa fa-pencil"></i> </a>
+
+                                                        <button class="btn btn-xs btn-danger btndelete"
+                                                            id="<?php echo $row['SupID']; ?>"> <i
+                                                                class="ionicons ion-trash-b"></i> </button>
+
+
+
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
                                     </table>
                                 </div>
                             </div>
@@ -81,6 +148,16 @@
                             <div class="col-md-12">
 
                                 <div class="form-group">
+                                    <label for="SupplierName" class="col-md-2 control-label">Supplier Code</label>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onfocusout="txt_onfocusout(this);" name="SupplierCode" id="SupplierCode"
+                                            value="<?php echo $SuppCode; ?>" readonly placeholder="Supplier Name">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
                                     <label for="SupplierName" class="col-md-2 control-label">Supplier Name</label>
                                     <div class="col-md-12">
                                         <input type="text" class="form-control" onfocus="txt_onfocus(this);"
@@ -106,11 +183,12 @@
                                             placeholder="Contact Person">
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
-                                    <label for="Contact" class="col-sm-2 control-label">Contact Number</label>
+                                    <label for="Contact" class="col-sm-5 control-label">Contact Number</label>
                                     <div class="col-sm-12">
                                         <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onkeypress="return CheckIsNumeric(event);"
                                             onfocusout="txt_onfocusout(this);" id="Contact" name="Contact"
                                             placeholder="Contact Number">
                                     </div>
@@ -142,7 +220,7 @@
 
                     </div>
                     <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button> 
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
                         <input type="submit" class="btn btn-info" value="Save" name="save" id="save" />
                     </div>
                 </form>
@@ -151,24 +229,124 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
+
+    <!--Edit Account -->
+    <div class="modal fade" id="modalEdit" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Supplier Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+
+                </div>
+                <form class="form-horizontal" enctype="multipart/form-data" id="edit_form">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="SupplierName" class="col-md-2 control-label">Supplier Code</label>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onfocusout="txt_onfocusout(this);" name="SupplierCodeE" id="SupplierCodeE"
+                                            value="<?php echo $SuppCode; ?>" readonly placeholder="Supplier Name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="SupplierName" class="col-md-2 control-label">Supplier Name</label>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onfocusout="txt_onfocusout(this);" name="SupplierNameE" id="SupplierNameE"
+                                            placeholder="Supplier Name">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Address" class="col-sm-2 control-label">Address</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onfocusout="txt_onfocusout(this);" id="AddressE" name="AddressE"
+                                            placeholder="Address">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="ContactPerson" class="col-sm-2 control-label">Contact Person</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onfocusout="txt_onfocusout(this);" id="ContactPersonE" name="ContactPersonE"
+                                            placeholder="Contact Person">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Contact" class="col-sm-5 control-label">Contact Number</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" onfocus="txt_onfocus(this);"
+                                            onkeypress="return CheckIsNumeric(event);"
+                                            onfocusout="txt_onfocusout(this);" id="ContactE" name="ContactE"
+                                            placeholder="Contact Number">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="Email" class="col-sm-2 control-label">Email</label>
+                                    <div class="col-sm-12">
+                                        <input type="email" class="form-control" onfocus="txt_onfocus(this);"
+                                            onfocusout="txt_onfocusout(this);" id="EmailE" name="EmailE"
+                                            placeholder="Email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Status" class="col-sm-3 control-label">Status</label>
+                                    <div class="col-sm-12">
+                                        <select style="width:100%" name="StatusE" id="StatusE"
+                                            class="form-control select2">
+                                            <option value=""></option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <input type="hidden" class="form-control" id="SupIDE" name="SupIDE" placeholder="Password">
+                        <input type="submit" class="btn btn-info" value="Save" name="saveE" id="saveE" />
+                    </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
 </div>
 
 
 <?php include('footer.php'); ?>
 <script>
 
-    $(document).ready(function () { 
+    $(document).ready(function () {
         //insert
         $('#insert_form').on('submit', function (e) {
             e.preventDefault();
 
+            var SupplierCode = $("#SupplierCode").val();
             var SupplierName = $("#SupplierName").val();
             var Address = $("#Address").val();
             var ContactPerson = $("#ContactPerson").val();
             var Contact = $("#Contact").val();
             var Email = $("#Email").val();
             var Status = $("#Status").val();
-
 
             if (SupplierName == "") {
                 toastr.error('Please Enter Supplier Name.', 'Invalid Input!!!')
@@ -200,7 +378,7 @@
                 return;
             }
 
-           // start_loader();
+            // start_loader();
             $.ajax({
                 url: 'Insert/insert_supplier.php',
                 type: "POST",
@@ -214,18 +392,19 @@
                     } else if (data == 'ok') {
                         swal({
                             title: "Saved!",
-                            text: "Supplier Saved!!",
+                            text: "Supplier Saved!",
                             type: "success",
                             timer: 2000
-                        }); 
+                        });
 
-                        setTimeout(function() {
-    location.reload();
-}, 2000);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     }
-                    // else{
-                    // alert(data)
-                    // }  
+                    else {
+                        toastr.error(data, 'Invalid Input!!!')
+                        return;
+                    }
                 }
             });
         });
@@ -233,55 +412,45 @@
         $('#edit_form').on('submit', function (e) {
             e.preventDefault();
 
-            var Firstname = $("#FirstnameE").val();
-            var Lastname = $("#LastnameE").val();
-            var UserType = $("#UserTypeE").val();
+            var SupplierName = $("#SupplierNameE").val();
+            var Address = $("#AddressE").val();
+            var ContactPerson = $("#ContactPersonE").val();
+            var Contact = $("#ContactE").val();
+            var Email = $("#EmailE").val();
             var Status = $("#StatusE").val();
-            var PCA = $("#PCAE").val();
 
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "progressBar": true,
-                "preventDuplicates": false,
-                "positionClass": "toast-top-right",
-                "onclick": null,
-                "showDuration": "400",
-                "hideDuration": "1000",
-                "timeOut": "7000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-
-            if (Firstname == "") {
-                toastr.error('Please Enter Firstname', 'Invalid Input!!!')
-                return;
-            }
-            if (Lastname == "") {
-                toastr.error('Please Enter Lastname', 'Invalid Input!!!')
-                return;
-            }
-            if (UserType == "") {
-                toastr.error('Please Select User Type', 'Invalid Input!!!')
+            if (SupplierName == "") {
+                toastr.error('Please Enter Supplier Name.', 'Invalid Input!!!')
                 return;
             }
 
-            if (PCA == "") {
-                toastr.error('Please Select Petty Cash Account', 'Invalid Input!!!')
+            if (Address == "") {
+                toastr.error('Please Enter Address.', 'Invalid Input!!!')
                 return;
             }
+
+            if (ContactPerson == "") {
+                toastr.error('Please Enter Contact Person.', 'Invalid Input!!!')
+                return;
+            }
+
+            if (Contact == "") {
+                toastr.error('Please Enter Contact Number.', 'Invalid Input!!!')
+                return;
+            }
+
+            if (Email == "") {
+                toastr.error('Please Enter Email.', 'Invalid Input!!!')
+                return;
+            }
+
             if (Status == "") {
-                toastr.error('Please Select Status', 'Invalid Input!!!')
+                toastr.error('Please Select Status.', 'Invalid Input!!!')
                 return;
             }
-
-
 
             $.ajax({
-                url: 'Update/update_user.php',
+                url: 'Update/update_supplier.php',
                 type: "POST",
                 data: new FormData(this),
                 contentType: false,
@@ -291,128 +460,46 @@
                         toastr.error('Employee Id No. Already Exist!!', 'Invalid Input!!!')
 
                         return;
-                    } else if (data == 'PCA') {
-                        toastr.error('Petty Cash Account Already In use', 'Invalid Input!!!')
-                        return;
                     } else if (data == 'ok') {
                         swal({
-                            title: "Saved!",
-                            text: "User Account Saved!!",
+                            title: "Updated!",
+                            text: "Supplier Saved!",
                             type: "success",
                             timer: 2000
                         });
-                        location.reload();
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     }
-                    // else{
-                    // alert(data);
-                    // }  
+                    else {
+                        toastr.error(data, 'Invalid Input!!!')
+                        return;
+                    }
                 }
             });
         });
 
-        $('#UserType').on('change', function () {
-            if (this.value == '3') {
-                $("#Login").hide();
-            }
-            else {
-                $("#Login").show();
-            }
-        });
 
     });
 
-    $.fn.capitalize = function () {
-        $.each(this, function () {
-            this.value = this.value.replace(/\b[a-z]/gi, function ($0) {
-                return $0.toUpperCase();
-            });
-            this.value = this.value.replace(/@([a-z])([^.]*\.[a-z])/gi, function ($0, $1) {
-                console.info(arguments);
-                return '@' + $0.toUpperCase() + $1.toLowerCase();
-            });
-            /*
-        var href = event.value != '/' ? event.value : '/wall/',
-            title = href.slice(1, -1).replace("/", " "),
-            myTitle = title.replace(/\b[a-z]/g, function ($0) {
-                return $0.toUpperCase();
-            });
-        */
-        });
-    }
-
-    //usage
-    $(".ProperCase").keyup(function () {
-        $(this).capitalize();
-    }).capitalize();
-
-    function readURL(input) {
-        //alert(input.alt);
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#' + input.alt)
-                    .attr('src', e.target.result)
-            };
-
-            reader.readAsDataURL(input.files[0]);
-        }
-        else {
-            var img = input.value;
-            $('#' + input.alt).attr('src', img);
-
-        }
-        $("#x").show().css("margin-right", "10px");
-    }
-
-    function CheckIsNumeric(objEvt) {
-        var charCode = (objEvt.which) ? objEvt.which : event.keyCode
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-    function CheckIsCharacter(objEvt) {
-        var charCode = (objEvt.which) ? objEvt.which : event.keyCode
-        if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    function GetUser(Id) {
+    function getSupplier(Id) {
 
         $.ajax({
-            url: 'query/getUserDetail.php',
+            url: 'query/getSupplier.php',
             method: "POST",
             data: { Id: Id },
             success: function (data) {
-                var splitString = data.split("-");
+                var splitString = data.split("!");
 
-                document.getElementById("UserIdE").value = splitString[0];
-                document.getElementById("FirstnameE").value = splitString[1];
-                document.getElementById("LastnameE").value = splitString[2];
+                document.getElementById("SupIDE").value = splitString[0];
+                document.getElementById("SupplierCodeE").value = splitString[1];
+                document.getElementById("SupplierNameE").value = splitString[2];
+                document.getElementById("AddressE").value = splitString[3];
+                document.getElementById("ContactPersonE").value = splitString[4];
+                document.getElementById("ContactE").value = splitString[5];
+                document.getElementById("EmailE").value = splitString[6];
+                document.getElementById("StatusE").value = splitString[7];
 
-                $('#UserTypeE').val(splitString[4]);
-                $('#UserTypeE').select2().trigger('change');
-
-                $('#PCAE').val(splitString[5]);
-                $('#PCAE').select2().trigger('change');
-
-                // alert(splitString[6]);
-                $('#StatusE').val(splitString[6]);
-                $('#StatusE').select2().trigger('change');
-
-
-                // document.getElementById("ImageUrl").src = splitString[3];
-                // alert(splitString[3]); 
-                $("#ImageUrl1").attr('src', splitString[3]);
-                // document.getElementById("myfileE").value = splitString[3]; 
                 $('#modalEdit').modal('show');
             }
         });
@@ -423,8 +510,8 @@
         var id = $(this).attr('id');
         var type = "User";
         swal({
-            title: "Are you sure you want to Inactive this account?",
-            text: "ARE YOU SURE YOU WANT TO CONTINUE?",
+            title: "Are you sure you want to delete?",
+            text: "",
             type: "error",
             showCancelButton: true,
             confirmButtonClass: "btn-danger",
@@ -437,28 +524,29 @@
                 if (isConfirm) {
 
                     $.ajax({
-                        url: 'Delete/delete_nonvat.php',
+                        url: 'Delete/delete_supplier.php',
                         method: "POST",
-                        data: { id: id, Type: type },
+                        data: { id: id },
                         success: function (data) {
-
+                            //  alert(id);
                             if (data == "ok") {
-                                stat = true;
                                 swal({
-                                    title: "Inactive Account!",
-                                    text: "User Account Successfully Inactive!",
+                                    title: "Delete",
+                                    text: "Supplier Deleted",
                                     type: "success",
-                                    timer: 1000
+                                    timer: 2000
                                 });
-                                setTimeout(function () { window.location.href = "<?php echo WEB_URL; ?>page/user.php"; }, 1000);
-
-
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 2000);
+                            } else {
+                                alert(data);
                             }
                         }
                     });
                 } else {
                     swal({
-                        title: "Saved!",
+                        title: "Cancel",
                         timer: 1
                     });
                 }

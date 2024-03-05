@@ -73,10 +73,8 @@ $path =dirname(__FILE__);
 
 define('WEB_URL', home_base_url()); 
 define('ROOT_PATH', $path); 
-define('title','Benram Construction ERP');
+define('title','Benram CMS');
     //$dbc = mysqli_connect('localhost', 'klkkqfxj_user', 'ED*A2{aK**Xa', 'klkkqfxj_ahc') or die('Could not connect because: '.mysqli_connect_error());
- $dbc = mysqli_connect('localhost', 'root', 'root', 'benramERP_db') or die('Could not connect because: '.mysqli_connect_error());
+ $dbc = mysqli_connect('localhost', 'root', 'root', 'benram_cms') or die('Could not connect because: '.mysqli_connect_error());
  
-
-
 ?>

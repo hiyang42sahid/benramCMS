@@ -1,87 +1,108 @@
 <?php include("config.php");
- 
+
 
 // header('Location: main.php');
-?><!DOCTYPE html>
+?>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Benram Construction ERP | Log in</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <title>Benram CMS | Log in</title>
 
   <link rel="icon" type="image/x-icon" class="js-site-favicon" href="<?php echo WEB_URL; ?>images/logo.png">
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/fontawesome-free/css/all.min.css">
-  <!-- icheck bootstrap -->
-  <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <!-- Toastr -->
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+  <!-- MDB -->
+  <link rel="stylesheet" href="dist/css/bootstrap-login-form.min.css" />
   <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/toastr/toastr.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="<?php echo WEB_URL; ?>dist/css/adminlte.min.css">
 </head>
-<body style="background-color:white;" class="hold-transition login-page">
-<div class="login-box">
-  <!-- /.login-logo -->
-  <div class="text-center" >
-   <img style="margin-bottom:50px;"  src="<?php echo WEB_URL; ?>images/logo.jpg" alt="Benram Construction ERP" width="100px;" height="100px;"><br>
-  </div>
-  <div  class="card card-outline card-primary">
-    <div class="card-header text-center">
-	   
-      <a href="index.php"  class="h3"><b>Benram Construction ERP</b></a>
-    </div>
-    <div class="card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
 
-      <form class="login" method="post" role="form" id="form" name="login" onSubmit="return valid();" method="post">
-        <div class="input-group mb-3">
-          <input type="text" name="Username" id="Username"  class="form-control" placeholder="Username">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user"></span>
+<body>
+  <!-- Start your project here-->
+
+  <style>
+    .divider:after,
+    .divider:before {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #eee;
+    }
+
+    .h-custom {
+      height: calc(100% - 73px);
+    }
+
+    @media (max-width: 450px) {
+      .h-custom {
+        height: 100%;
+      }
+    }
+  </style>
+  <section class="vh-100">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-9 col-lg-6 col-xl-5">
+          <img style="margin-left:25%" src="<?php echo WEB_URL; ?>images/logo.png" class="img-fluid" alt="Benram CMS"
+            width="50%">
+        </div>
+        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form class="login" method="post" role="form" id="form" name="login" onSubmit="return valid();" method="post">
+      
+            <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+              <p class="lead fw-normal mb-0 me-3 "><b>Welcome to Benram CMS</b></p>
+
             </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" name="Password" id="password" class="form-control" placeholder="Password">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
+
+            <div class="divider d-flex align-items-center my-4">
+              <p class="text-center fw-bold mx-3 mb-0">Login</p>
             </div>
-          </div>
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input onfocus="txt_onfocus(this);" onfocusout="txt_onfocusout(this);" type="text" id="username" name="username"
+                class="form-control form-control-lg" placeholder="Enter Username" />
+              <label class="form-label" for="form3Example3">Username</label>
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-3">
+              <input type="password" id="password" name="password" onfocus="txt_onfocus(this);" onfocusout="txt_onfocusout(this);"
+                class="form-control form-control-lg" placeholder="Enter Password" />
+              <label class="form-label" for="form3Example4">Password</label>
+            </div>
+
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button type="button" onclick="LogIn()"  class="btn btn-primary btn-lg"
+                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+
+            </div>
+
+          </form>
         </div>
-        <div class="row">
-          <div class="col-8"> 
-          </div>
-          <!-- /.col -->
-          <div class="col-4">
-            <button  type="button"  onclick="LogIn()"  class="btn btn-primary btn-block">Sign In</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form> 
-      <!-- /.social-auth-links -->
- 
+      </div>
     </div>
-    <!-- /.card-body -->
-  </div>
-  <!-- /.card -->
-</div>
-<!-- /.login-box -->
+
+  </section>
+  <!-- End your project here-->
+
+  <!-- MDB -->
+  <script type="text/javascript" src="dist/js/mdb.min.js"></script>
+  <!-- Custom scripts -->
+  <script type="text/javascript"></script>
 
 <!-- jQuery -->
 <script src="<?php echo WEB_URL; ?>plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="<?php echo WEB_URL; ?>plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Toastr -->
+  <!-- Toastr -->
 <script src="<?php echo WEB_URL; ?>plugins/toastr/toastr.min.js"></script>
-<!-- AdminLTE App -->
-<script src="<?php echo WEB_URL; ?>dist/js/adminlte.min.js"></script>
+  <script>
 
-<script>
+    
 
 	$(document).ready(function(){ 
 		sessionStorage.removeItem("lastTimeStamp");  
@@ -90,13 +111,13 @@
 	
 	function LogIn(){
 
-		var Username= $("#Username").val();
+		var Username= $("#username").val();
 		var pass= $("#password").val(); 
 
 		 
 		if(Username == ""){
 			toastr.error('Please Enter Username','Invalid Input!!!')
-			$("#Username").focus();
+			$("#username").focus();
 			return;
 		}  
 
@@ -114,8 +135,7 @@
 			beforeSend: function () { 
 			},
 			success:function(msg){
-				var res = msg.split(".");
-
+				var res = msg.split("."); 
 				if(res[0]=='exist'){ 
 					window.location.href = "pages/index.php"; 
 				}else{
@@ -135,7 +155,16 @@
 		if(keyCode==13){
 			LogIn();
 		}    
-	} 
-</script>
+	}  
+
+  function txt_onfocus(txt) {
+      txt.style.backgroundColor = "#e8f0fe";
+    }
+
+    function txt_onfocusout(txt) {
+      txt.style.backgroundColor = "white";
+    } 
+  </script>
 </body>
+
 </html>

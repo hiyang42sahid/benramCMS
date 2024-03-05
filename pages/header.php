@@ -5,36 +5,6 @@ session_start();
 
 include("../config.php");
 
-$page_name = '';
-
-
-$page_name = pathinfo(curPageURL(), PATHINFO_FILENAME);
-
-// if(!isset($_SESSION['objLogin']['Fullname'])){
-//     header("Location: ".WEB_URL."logout.php");
-//     die();
-// }  
-if ($page_name == 'nonvat') {
-    $page_name1 = 'NonVAT';
-
-} else {
-
-    $page_name1 = ucwords($page_name);
-}
-function curPageURL()
-{
-    $pageURL = 'http';
-    if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-        $pageURL .= "s";
-    }
-    $pageURL .= "://";
-    if ($_SERVER["SERVER_PORT"] != "80") {
-        $pageURL .= $_SERVER["SERVER_NAME"] . ":" . $_SERVER["SERVER_PORT"] . $_SERVER["REQUEST_URI"];
-    } else {
-        $pageURL .= $_SERVER["SERVER_NAME"] . $_SERVER["REQUEST_URI"];
-    }
-    return $pageURL;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,9 +13,9 @@ function curPageURL()
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-        <?php echo title . ' | ' . $page_name1; ?>
+        <?php echo title ?>
     </title>
-    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="<?php echo WEB_URL; ?>images/logo.jpg">
+    <link rel="icon" type="image/x-icon" class="js-site-favicon" href="<?php echo WEB_URL; ?>images/logo.png">
 
 
     <!-- Google Font: Source Sans Pro -->
@@ -58,10 +28,25 @@ function curPageURL()
     <link rel="stylesheet" href="<?php echo WEB_URL; ?>dist/css/adminlte.min.css">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
     <!-- Toastr -->
     <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/toastr/toastr.min.css">
     <!-- SweetAlert -->
     <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/Ionicons/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/datatables/fixedHeader.dataTables.min.css">
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/datatable/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="<?php echo WEB_URL; ?>plugins/datatable/css/buttons.dataTables.min.css">
+
 </head>
 
 <body class="sidebar-mini layout-fixed layout-navbar-fixed sidebar-mini-md sidebar-mini-xs text-sm"
@@ -75,12 +60,7 @@ function curPageURL()
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="#" class="nav-link">Contact</a>
-                </li>
+               
             </ul>
 
             <!-- Right navbar links -->
@@ -106,107 +86,7 @@ function curPageURL()
                             </div>
                         </form>
                     </div>
-                </li>
-
-                <!-- Messages Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-comments"></i>
-                        <span class="badge badge-danger navbar-badge">3</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="dist/img/user1-128x128.jpg" alt="User Avatar"
-                                    class="img-size-50 mr-3 img-circle">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Brad Diesel
-                                        <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">Call me whenever you can...</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="dist/img/user8-128x128.jpg" alt="User Avatar"
-                                    class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        John Pierce
-                                        <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">I got your message bro</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <!-- Message Start -->
-                            <div class="media">
-                                <img src="dist/img/user3-128x128.jpg" alt="User Avatar"
-                                    class="img-size-50 img-circle mr-3">
-                                <div class="media-body">
-                                    <h3 class="dropdown-item-title">
-                                        Nora Silvester
-                                        <span class="float-right text-sm text-warning"><i
-                                                class="fas fa-star"></i></span>
-                                    </h3>
-                                    <p class="text-sm">The subject goes here</p>
-                                    <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                                </div>
-                            </div>
-                            <!-- Message End -->
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-                    </div>
-                </li>
-                <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-warning navbar-badge">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                        <i class="fas fa-expand-arrows-alt"></i>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                        <i class="fas fa-th-large"></i>
-                    </a>
-                </li>
+                </li> 
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -215,7 +95,7 @@ function curPageURL()
         <aside class="main-sidebar sidebar-dark-primary bg-navy elevation-4 sidebar-no-expand">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link bg-primary text-sm">
-                <img src="<?php echo WEB_URL; ?>images/logo.jpg" alt="<?php echo title; ?>"
+                <img src="<?php echo WEB_URL; ?>images/logo.png" alt="<?php echo title; ?>"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">
                     <?php echo title; ?>
@@ -246,7 +126,7 @@ function curPageURL()
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a title="Dashboard" href="<?php echo WEB_URL; ?>pages/dashboard.php" class="nav-link <?php if ($page_name != '' && $page_name == 'dashboard') {
+                            <a title="Dashboard" id="dashboard" href="<?php echo WEB_URL; ?>pages/dashboard.php" class="dashboard nav-link <?php if ($page_name != '' && $page_name == 'dashboard' || $page_name == 'index') {
                                    echo 'active';
                                } ?>">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -266,7 +146,7 @@ function curPageURL()
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a title="Dashboard" href="<?php echo WEB_URL; ?>pages/itemlist.php" class="nav-link <?php if ($page_name != '' && $page_name == 'item list') {
+                            <a title="Item List" href="<?php echo WEB_URL; ?>pages/item.php" class="nav-link <?php if ($page_name != '' && $page_name == 'item list') {
                                    echo 'active';
                                } ?>">
                                 <i class="nav-icon fas fa-boxes"></i>
@@ -276,7 +156,7 @@ function curPageURL()
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a title="Dashboard" href="<?php echo WEB_URL; ?>pages/purchaseorder.php" class="nav-link <?php if ($page_name != '' && $page_name == 'purchase order') {
+                            <a title="Purchase Orders" href="<?php echo WEB_URL; ?>pages/purchaseorder.php" class="nav-link <?php if ($page_name != '' && $page_name == 'purchase orders') {
                                    echo 'active';
                                } ?>">
                                 <i class="nav-icon fas fa-file-invoice"></i>
@@ -285,7 +165,16 @@ function curPageURL()
                                 </p>
                             </a>
                         </li>
-
+                        <li class="nav-item">
+                            <a title="Project List" href="<?php echo WEB_URL; ?>pages/project.php" class="nav-link <?php if ($page_name != '' && $page_name == 'project list') {
+                                   echo 'active';
+                               } ?>">
+                                <i class="nav-icon fas fa-building"></i>
+                                <p>
+                                    Project List
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-header">Maintenance</li>
                         <li class="nav-item">
                             <a title="Dashboard" href="<?php echo WEB_URL; ?>pages/user.php" class="nav-link <?php if ($page_name != '' && $page_name == 'user') {
